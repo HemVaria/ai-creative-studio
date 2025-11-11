@@ -18,6 +18,10 @@ Below are representative images of core flows and generated outputs:
 ![Product Advertising (Beauty / Marketing)](./images/productad.png)
 ![Virtual Room Staging (Real Estate)](./images/Virtual%20Room.png)
 
+### Demo Video
+
+[![Watch the demo on YouTube](https://img.youtube.com/vi/J5P3U60t4QE/maxresdefault.jpg)](https://youtu.be/J5P3U60t4QE)
+
 ### Project assets
 
 Raw and supplemental assets:

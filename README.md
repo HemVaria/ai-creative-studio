@@ -8,6 +8,10 @@ An AI-powered application for generating creative content for various use cases.
 
 [Open the live app (Google Cloud Run)](https://ai-creative-studio-final-535067068787.us-west1.run.app/)
 
+### Demo Video
+
+[![Watch the demo on YouTube](https://img.youtube.com/vi/J5P3U60t4QE/maxresdefault.jpg)](https://youtu.be/J5P3U60t4QE)
+
 ## Screenshots/Demo
 
 Below are representative images of core flows and generated outputs:
@@ -17,10 +21,6 @@ Below are representative images of core flows and generated outputs:
 ![Fashion Virtual Try-On result](./images/fashion%20try%20on%20.jpg)
 ![Product Advertising (Beauty / Marketing)](./images/productad.png)
 ![Virtual Room Staging (Real Estate)](./images/Virtual%20Room.png)
-
-### Demo Video
-
-[![Watch the demo on YouTube](https://img.youtube.com/vi/J5P3U60t4QE/maxresdefault.jpg)](https://youtu.be/J5P3U60t4QE)
 
 ### Project assets
 

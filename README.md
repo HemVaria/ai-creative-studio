@@ -1,4 +1,4 @@
-# AI Creative Studio
+
 # AI Creative Studio
 ![AI Creative Studio](./images/thumbnail_aicreativestudio.jpeg)
 

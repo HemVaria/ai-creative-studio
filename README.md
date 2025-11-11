@@ -1,6 +1,6 @@
 # AI Creative Studio
 # AI Creative Studio
-#file:thumbnail_aicreativestudio.jpeg
+![AI Creative Studio](./images/thumbnail_aicreativestudio.jpeg)
 
 An AI-powered application for generating creative content for various use cases.
 

@@ -1,59 +1,60 @@
-
 # AI Creative Studio
+
 ![AI Creative Studio](./images/thumbnail_aicreativestudio.jpeg)
 
-An AI-powered application for generating creative content for various use cases.
+An AI-powered creative suite for generating professional content across various industries. Built with Next.js 15, Google Gemini 2.0, and Flux.1.
 
-## Live Demo
+## 🚀 Live Demo
 
-[Open the live app (Google Cloud Run)](https://ai-creative-studio-final-535067068787.us-west1.run.app/)
+[Open the live app](https://ai-creative-studio-final-535067068787.us-west1.run.app/)
 
 ### Demo Video
 
 [![Watch the demo on YouTube](https://img.youtube.com/vi/J5P3U60t4QE/maxresdefault.jpg)](https://youtu.be/J5P3U60t4QE)
 
-## Screenshots/Demo
+## 📸 Screenshots
 
-Below are representative images of core flows and generated outputs:
+| Homepage | Menu Visualizer |
+|----------|-----------------|
+| ![Homepage UI](./images/homepage.png) | ![Menu Visualizer](./images/menuvisualizerpage.png) |
 
-![Homepage UI](./images/homepage.png)
-![Menu Visualizer / Food Generation](./images/menuvisualizerpage.png)
-![Fashion Virtual Try-On result](./images/fashion%20try%20on%20.jpg)
-![Product Advertising (Beauty / Marketing)](./images/productad.png)
-![Virtual Room Staging (Real Estate)](./images/Virtual%20Room.png)
+| Virtual Try-On | Product Advertising | Real Estate Staging |
+|----------------|---------------------|---------------------|
+| ![Fashion](./images/fashion%20try%20on%20.jpg) | ![Product Ad](./images/productad.png) | ![Real Estate](./images/Virtual%20Room.png) |
 
-### Project assets
+## ✨ Features
 
-Raw and supplemental assets:
-- All image resources folder: `./images/`
-- Test sample images used during development: `./test-images/`
+*   **Authentication:** Secure user login and registration via Supabase.
+*   **Multi-Model AI Pipeline:**
+    *   **Google Gemini 2.0 Flash (Experimental):** Used for advanced vision analysis and creative copywriting.
+    *   **Flux.1 Schnell:** High-quality image generation for experimental workflows.
+    *   **InstructPix2Pix:** Fast image editing for standard workflows.
+*   **Specialized Studios:**
+    *   **💄 Beauty Ad Studio:** Generate high-end product photography with optional "Vision + Flux" workflow.
+    *   **👗 Fashion Model Studio:** Virtual try-on and outfit visualization.
+    *   **🏠 Real Estate Studio:** Virtual staging for empty rooms.
+    *   **🍽️ Restaurant Studio:** AI food photography and menu visualization.
+    *   **📝 Marketing Ad Copy:** Generate compelling copy for your campaigns.
+*   **Gallery:** Save and manage your generated assets.
 
-## Features List
+## 🛠️ Tech Stack
 
-*   **Authentication:** Secure user login and registration.
-*   **Image Generation:** Generate images from text prompts using AI.
-*   **Image Gallery:** View a gallery of previously generated images.
-*   **Prompt Enhancement:** Improve user prompts for better image generation results.
-*   **Specialized Studios:** Dedicated studios for specific use cases like:
-    *   Fashion Model Studio
-    *   Beauty Ad Studio
-    *   Real Estate Studio
-    *   Restaurant Studio
-    *   Marketing Ad Copy Studio
+*   **Framework:** [Next.js 15](https://nextjs.org/) (App Router)
+*   **Language:** TypeScript
+*   **Styling:** Tailwind CSS, Framer Motion
+*   **AI Models:** 
+    *   Google Gemini 2.0 Flash Exp
+    *   Black Forest Labs FLUX.1-schnell (via Hugging Face)
+    *   Tim Brooks InstructPix2Pix (via Hugging Face)
+*   **Backend & Auth:** Supabase
 
-## Tech Stack
-
-*   **Frontend:** React, TypeScript, Vite
-*   **AI:** Google Gemini API
-*   **Backend & Database:** Supabase
-
-## Setup Instructions
+## ⚡ Getting Started
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/ai-creative-studio-final-cloud.git
-cd ai-creative-studio-final-cloud
+git clone https://github.com/HemVaria/ai-creative-studio.git
+cd ai-creative-studio
 ```
 
 ### 2. Install dependencies
@@ -62,14 +63,18 @@ cd ai-creative-studio-final-cloud
 npm install
 ```
 
-### 3. Environment variable setup
+### 3. Environment Setup
 
-Create a `.env.local` file in the root of your project (git-ignored) and add the following environment variables:
+Create a `.env.local` file in the root directory and add the following keys:
 
-```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_GEMINI_API_KEY=your_gemini_api_key
+```env
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# AI Service Keys
+GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key
+HUGGING_FACE_ACCESS_TOKEN=your_hugging_face_token
 ```
 
 ### 4. Run the development server
@@ -78,52 +83,26 @@ VITE_GEMINI_API_KEY=your_gemini_api_key
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173`.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## API Keys Setup
+## 🔑 API Configuration
 
 ### Supabase
-
-1.  Go to [Supabase](https://supabase.io/) and create a new project.
-2.  In your project dashboard, go to **Settings** > **API**.
-3.  You will find your **Project URL** and **Project API keys**. Use the `anon` `public` key for `VITE_SUPABASE_ANON_KEY`.
+1. Create a project at [Supabase](https://supabase.com).
+2. Retrieve your URL and Anon Key from Project Settings > API.
 
 ### Google Gemini
+1. Get your API key from [Google AI Studio](https://aistudio.google.com/).
+2. Ensure you have access to `gemini-2.0-flash-exp`.
 
-1.  Go to [Google AI Studio](https://aistudio.google.com/) and create a new API key.
-2.  Make sure the Gemini API is enabled for your project.
-3.  Copy the API key and add it to your `.env` file as `VITE_GEMINI_API_KEY`.
+### Hugging Face
+1. Create an account at [Hugging Face](https://huggingface.co).
+2. Generate an Access Token (Read permissions) from Settings > Access Tokens.
 
-## Challenges & Solutions
+## 🔒 Security
 
-*(Describe any challenges you faced during development and how you solved them. For example:)*
+This project uses server-side actions for sensitive API calls (Gemini, Hugging Face) to keep your API keys secure. Client-side environment variables are strictly limited to public Supabase configuration.
 
-*   **Challenge:** Integrating the Gemini API for the first time.
-*   **Solution:** Followed the official documentation and created a dedicated service module to handle all API interactions, which made the code cleaner and easier to debug.
+## 🤝 Contributing
 
-*   **Challenge:** Managing application state between different components.
-*   **Solution:** Utilized React Context to provide a global state for authentication and user information, avoiding prop drilling.
-
-## Security & Secrets
-
-This project uses client-side environment variables (prefixed with `VITE_`). Anything exposed in the frontend bundle is public, so:
-
-- Never commit real API keys or service credentials; `.env.local` is git-ignored.
-- Rotated any previously exposed keys (e.g., Supabase anon key or Gemini key) if they were ever committed.
-- For stronger security (row-level policies, rate limiting, key protection) move sensitive operations behind a lightweight server / edge function instead of calling third-party APIs directly from the browser.
-- Example env file to create locally:
-
-```bash
-cp .env.example .env.local
-```
-
-Then populate the values.
-
-## Future Improvements
-
-*(Optional: List some features or improvements you would like to add in the future.)*
-
-*   Implement more advanced prompt engineering techniques.
-*   Add more specialized studios for different industries.
-*   Allow users to upload their own images for AI-powered editing.
-*   Improve the UI/UX of the application.
+Contributions are welcome! Please feel free to submit a Pull Request.

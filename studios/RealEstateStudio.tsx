@@ -67,6 +67,12 @@ const RealEstateStudio: React.FC = () => {
       const formData = new FormData();
       formData.append('image', imageFile);
       formData.append('style', selectedStyle);
+      
+      const apiKey = localStorage.getItem('google_api_key');
+      if (apiKey) {
+        formData.append('apiKey', apiKey);
+      }
+
       const result = await stageRealEstateImageAction(formData);
       setGeneratedImage(`data:image/png;base64,${result}`);
 

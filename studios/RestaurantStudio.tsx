@@ -43,7 +43,8 @@ const RestaurantStudio: React.FC = () => {
     setIsEnhancing(true);
     setError(null);
     try {
-      const enhanced = await enhancePromptAction(prompt);
+      const apiKey = localStorage.getItem('google_api_key') || undefined;
+      const enhanced = await enhancePromptAction(prompt, apiKey);
       setPrompt(enhanced);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred while enhancing prompt.');
@@ -62,7 +63,8 @@ const RestaurantStudio: React.FC = () => {
     setGeneratedImage(null);
 
     try {
-      const result = await generateFoodImageAction(prompt, selectedStyle);
+      const apiKey = localStorage.getItem('google_api_key') || undefined;
+      const result = await generateFoodImageAction(prompt, selectedStyle, apiKey);
       setGeneratedImage(`data:image/jpeg;base64,${result}`);
 
       if (user) {

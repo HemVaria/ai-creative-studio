@@ -5,14 +5,22 @@ import ImageInput from '../components/ImageInput';
 import AnimatedGenerateButton from '../components/AnimatedGenerateButton';
 import Spinner from '../components/Spinner';
 import SpotlightCard from '../components/SpotlightCard';
-import { generateBeautyAdImageAction, generateBeautyAdImageExperimentalAction, enhancePromptAction } from '../app/actions';
+import { generateBeautyAdImageAction, generateBeautyAdImageExperimentalAction, enhancePromptAction, checkConfigurationAction } from '../app/actions';
 import EnhancePromptButton from '../components/EnhancePromptButton';
 import { useAuth } from '../contexts/AuthContext';
 import { uploadAndSaveGeneration } from '../services/supabaseService';
 import { Studio } from '../types';
-import { Download, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { Download, Sparkles, Image as ImageIcon, Settings, CheckCircle, XCircle } from 'lucide-react';
 
-const AD_STYLES = ['Minimalist', 'Natural', 'Lush', 'Geometric', 'Abstract', 'Aquatic'];
+const AD_STYLES = [
+  'Bold Modern', 
+  'Dark Luxe', 
+  'Vintage', 
+  'Scandinavian', 
+  'Pop Art', 
+  'Neon Glow', 
+  'Organic'
+];
 
 const SectionHeader: React.FC<{title: string, subtitle?: string}> = ({title, subtitle}) => (
     <div className="mb-4">
@@ -35,13 +43,16 @@ const BeautyAdStudio: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [prompt, setPrompt] = useState<string>('');
+  const [adText, setAdText] = useState<string>('');
   const [selectedStyle, setSelectedStyle] = useState<string>(AD_STYLES[0]);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [adCopy, setAdCopy] = useState<{headline: string, tagline: string} | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isEnhancing, setIsEnhancing] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [useExperimental, setUseExperimental] = useState<boolean>(false);
+  const [useExperimental, setUseExperimental] = useState<boolean>(true);
+  const [configStatus, setConfigStatus] = useState<'idle' | 'checking' | 'ok' | 'error'>('idle');
+  const [configMessage, setConfigMessage] = useState<string>('');
   
   const handleImageSelect = useCallback((file: File) => {
     setImageFile(file);
@@ -60,12 +71,24 @@ const BeautyAdStudio: React.FC = () => {
     };
   }, [imagePreview]);
 
+  const handleCheckConfig = useCallback(async () => {
+    setConfigStatus('checking');
+    const apiKey = localStorage.getItem('google_api_key') || undefined;
+    const result = await checkConfigurationAction(apiKey);
+    setConfigStatus(result.status);
+    setConfigMessage(result.message);
+    setTimeout(() => {
+        if (result.status === 'ok') setConfigStatus('idle');
+    }, 3000);
+  }, []);
+
   const handleEnhancePrompt = useCallback(async () => {
     if (!prompt) return;
     setIsEnhancing(true);
     setError(null);
     try {
-      const enhanced = await enhancePromptAction(prompt);
+      const apiKey = localStorage.getItem('google_api_key') || undefined;
+      const enhanced = await enhancePromptAction(prompt, apiKey);
       setPrompt(enhanced);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred while enhancing prompt.');
@@ -89,6 +112,10 @@ const BeautyAdStudio: React.FC = () => {
       formData.append('image', imageFile);
       formData.append('prompt', prompt);
       formData.append('style', selectedStyle);
+      if (adText) formData.append('adText', adText);
+      
+      const apiKey = localStorage.getItem('google_api_key');
+      if (apiKey) formData.append('apiKey', apiKey);
 
       let resultImage = "";
 
@@ -123,7 +150,7 @@ const BeautyAdStudio: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [imageFile, prompt, selectedStyle, user, useExperimental]);
+  }, [imageFile, prompt, selectedStyle, user, useExperimental, adText]);
   
   const displayImage = generatedImage || imagePreview;
   const isFormValid = !!imageFile && !!prompt;
@@ -132,6 +159,30 @@ const BeautyAdStudio: React.FC = () => {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       {/* Left Column: Inputs */}
       <div className="lg:col-span-5 space-y-8">
+        
+        {/* Config Check */}
+        <div className="flex items-center justify-between bg-zinc-900/30 border border-white/5 rounded-xl p-3">
+            <span className="text-xs text-zinc-400 flex items-center gap-2">
+                <Settings className="w-3 h-3" /> API Status
+            </span>
+            <button 
+                onClick={handleCheckConfig}
+                disabled={configStatus === 'checking'}
+                className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-2 ${
+                    configStatus === 'ok' ? 'bg-green-500/20 border-green-500/50 text-green-400' :
+                    configStatus === 'error' ? 'bg-red-500/20 border-red-500/50 text-red-400' :
+                    'bg-white/5 border-white/10 text-zinc-300 hover:bg-white/10'
+                }`}
+            >
+                {configStatus === 'checking' ? <Spinner className="w-3 h-3" /> : 
+                 configStatus === 'ok' ? <><CheckCircle className="w-3 h-3" /> Ready</> :
+                 configStatus === 'error' ? <><XCircle className="w-3 h-3" /> Error</> :
+                 'Check Config'}
+            </button>
+        </div>
+        {configStatus === 'error' && <p className="text-xs text-red-400 px-1">{configMessage}</p>}
+
+
         <div className="bg-zinc-900/50 border border-white/10 rounded-3xl p-6 backdrop-blur-sm">
           <SectionHeader title="Upload Product" subtitle="Use a clean product shot, ideally on a transparent background (PNG)." />
           <div className="mt-4">
@@ -156,6 +207,17 @@ const BeautyAdStudio: React.FC = () => {
                    <EnhancePromptButton onClick={handleEnhancePrompt} isLoading={isEnhancing} disabled={!prompt || isLoading} />
                 </div>
             </div>
+        </div>
+
+        <div className="bg-zinc-900/50 border border-white/10 rounded-3xl p-6 backdrop-blur-sm">
+            <SectionHeader title="Ad Text Overlay" subtitle="Add professional text directly into the image." />
+            <input
+                type="text"
+                value={adText}
+                onChange={(e) => setAdText(e.target.value)}
+                placeholder="E.g., 'Summer Sale' or 'Pure Elegance'"
+                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-zinc-600 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all"
+            />
         </div>
         
         <div className="bg-zinc-900/50 border border-white/10 rounded-3xl p-6 backdrop-blur-sm">
@@ -188,7 +250,7 @@ const BeautyAdStudio: React.FC = () => {
               className="w-4 h-4 rounded border-gray-300 text-fuchsia-600 focus:ring-fuchsia-500 bg-zinc-800 border-white/10"
             />
             <label htmlFor="useExperimental" className="text-sm text-zinc-400 select-none cursor-pointer">
-              Use Experimental Vision + Flux (Gemini 2.0)
+              Use Gemini Vision + Imagen 3 (High Quality)
             </label>
           </div>
           <AnimatedGenerateButton 
@@ -215,18 +277,6 @@ const BeautyAdStudio: React.FC = () => {
                         displayImage ? (
                             <div className="relative w-full h-full flex items-center justify-center">
                                 <img src={displayImage} alt="Ad preview" className="rounded-lg shadow-2xl max-w-full max-h-full object-contain" />
-                                {adCopy && (
-                                    <div className="absolute bottom-8 left-0 right-0 text-center px-4">
-                                        <div className="bg-black/60 backdrop-blur-md border border-white/10 p-6 rounded-2xl inline-block max-w-md shadow-2xl transform transition-all hover:scale-105">
-                                            <h3 className="text-2xl font-bold text-white mb-2 font-serif tracking-wide bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
-                                                {adCopy.headline}
-                                            </h3>
-                                            <p className="text-sm text-zinc-300 uppercase tracking-widest font-medium">
-                                                {adCopy.tagline}
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
                             </div>
                         ) : (
                             <PreviewPlaceholder text="Upload a product image to get started" />

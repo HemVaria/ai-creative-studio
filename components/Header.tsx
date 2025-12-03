@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '../contexts/AuthContext';
-import { Menu, Image as ImageIcon, LayoutGrid, LogOut } from 'lucide-react';
+import { Menu, Image as ImageIcon, LayoutGrid, LogOut, Settings } from 'lucide-react';
 import { Studio } from '../types';
 
 interface HeaderProps {
@@ -63,6 +63,10 @@ const Header: React.FC<HeaderProps> = ({ activeStudio }) => {
               <Link href="/gallery" className="hover:text-white transition font-sans flex items-center gap-2">
                 <ImageIcon className="w-4 h-4" />
                 Gallery
+              </Link>
+              <Link href="/settings" className="hover:text-white transition font-sans flex items-center gap-2">
+                <Settings className="w-4 h-4" />
+                Settings
               </Link>
             </nav>
 

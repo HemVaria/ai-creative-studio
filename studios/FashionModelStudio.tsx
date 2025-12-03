@@ -110,7 +110,8 @@ const FashionModelStudio: React.FC = () => {
     setIsEnhancing(true);
     setError(null);
     try {
-      const enhanced = await enhancePromptAction(customPrompt);
+      const apiKey = localStorage.getItem('google_api_key') || undefined;
+      const enhanced = await enhancePromptAction(customPrompt, apiKey);
       setCustomPrompt(enhanced);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred while enhancing prompt.');
@@ -139,6 +140,12 @@ const FashionModelStudio: React.FC = () => {
       const formData = new FormData();
       formData.append('image', imageFile);
       formData.append('style', styleToGenerate);
+      
+      const apiKey = localStorage.getItem('google_api_key');
+      if (apiKey) {
+        formData.append('apiKey', apiKey);
+      }
+
       const result = await generateVirtualTryOnImageAction(formData);
       setGeneratedImage(`data:image/png;base64,${result}`);
 
